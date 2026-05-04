@@ -1,9 +1,12 @@
-name: Publish
+name: Publish @yasser172/tec-ui
 
 on:
   push:
-    tags: ['v*']
-    workflow_dispatch:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'package.json'
+  workflow_dispatch:
 
 jobs:
   security-gate:
@@ -20,8 +23,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-sdk-${{ hashFiles('package-lock.json') }}
-          restore-keys: ${{ runner.os }}-sdk-
+          key: ${{ runner.os }}-ui-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-ui-
 
       - run: npm install
 
@@ -35,7 +38,7 @@ jobs:
             for (const f of fs.readdirSync(dir, { withFileTypes: true })) {
               const full = path.join(dir, f.name);
               if (f.isDirectory() && !['node_modules','dist'].includes(f.name)) scan(full);
-              else if (f.name.endsWith('.ts')) {
+              else if (f.name.endsWith('.ts') || f.name.endsWith('.tsx')) {
                 const content = fs.readFileSync(full, 'utf-8');
                 if (ZWC.test(content)) { console.error('ZWC found: ' + full); process.exit(1); }
               }
@@ -61,8 +64,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-sdk-${{ hashFiles('package-lock.json') }}
-          restore-keys: ${{ runner.os }}-sdk-
+          key: ${{ runner.os }}-ui-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-ui-
 
       - run: npm install
 
@@ -70,13 +73,13 @@ jobs:
 
       - name: Publish to npm
         run: |
-          PUBLISHED=$(npm view @yasser172/tec-sdk version 2>/dev/null || echo "0.0.0")
+          PUBLISHED=$(npm view @yasser172/tec-ui version 2>/dev/null || echo "0.0.0")
           CURRENT=$(node -p "require('./package.json').version")
           if [ "$PUBLISHED" = "$CURRENT" ]; then
             echo "Version $CURRENT already published — skipping"
             exit 0
           fi
-          echo "Publishing @yasser172/tec-sdk@$CURRENT..."
+          echo "Publishing @yasser172/tec-ui@$CURRENT..."
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
