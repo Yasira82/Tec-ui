@@ -17,7 +17,7 @@ export interface TecAppMeta {
 export interface ApiResponse<T = unknown> {
   success:  boolean;
   data?:    T;
-  error?:   { code: string; message: string };
+  error?:   { code: string; message: string; field?: string; requestId?: string };
   message?: string;
 }
 
@@ -33,12 +33,50 @@ export type PaymentStatus =
   | 'created' | 'approved' | 'completed'
   | 'cancelled' | 'failed';
 
+// ✅ amount = string DECIMAL دايماً مش number
 export interface PaymentRecord {
   id:        string;
-  amount:    number;
+  amount:    string;       // DECIMAL(20,8) as string
   currency:  string;
   status:    PaymentStatus;
   memo:      string;
+  source?:   string;
   createdAt: string;
-  txHash?:   string;
+  txid?:     string;
+}
+
+export type PaymentSource =
+  | 'hub' | 'commerce' | 'assets' | 'ecommerce'
+  | 'life' | 'connection' | 'fundx' | 'estate';
+
+// ── User ──────────────────────────────────────────────────
+export type SubscriptionPlan = 'FREE' | 'PRO' | 'ENTERPRISE';
+export type KycStatus = 'NOT_STARTED' | 'PENDING' | 'VERIFIED' | 'REJECTED';
+
+export interface TecUser {
+  id:               string;
+  piId:             string;
+  piUsername:       string;
+  role:             string;
+  subscriptionPlan: SubscriptionPlan | null;
+  kycVerified?:     boolean;
+  createdAt:        string;
+}
+
+// ── Wallet ────────────────────────────────────────────────
+export interface WalletBalance {
+  balance:  string;   // DECIMAL string
+  currency: string;
+}
+
+// ── Notification ──────────────────────────────────────────
+export type NotifType = 'PAYMENT' | 'WALLET' | 'KYC' | 'SECURITY' | 'SYSTEM';
+
+export interface TecNotification {
+  id:        string;
+  type:      NotifType;
+  title:     string;
+  message:   string;
+  read:      boolean;
+  createdAt: string;
 }
