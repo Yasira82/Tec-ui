@@ -39,8 +39,6 @@ export interface PaymentResult {
 }
 
 // ── createPaymentRecord ───────────────────────────────────
-// ينشئ payment record في Backend قبل Pi.createPayment()
-// يرجع internalId أو null لو فشل
 export const createPaymentRecord = async (
   amount:    number,
   productId: string,
@@ -52,17 +50,12 @@ export const createPaymentRecord = async (
       method:      'POST',
       credentials: 'include',
       headers:     buildPaymentHeaders(),
-      body: JSON.stringify({
-        amount,
-        product_id: productId,
-        memo,
-        source,
-      }),
+      body: JSON.stringify({ amount, product_id: productId, memo, source }),
     });
     if (!res.ok) return null;
     const data = await res.json() as {
       data?: { payment?: { id?: string }; id?: string };
-      id?: string;
+      id?:   string;
     };
     return data?.data?.payment?.id ?? data?.data?.id ?? data?.id ?? null;
   } catch {
@@ -71,8 +64,6 @@ export const createPaymentRecord = async (
 };
 
 // ── createU2APayment ──────────────────────────────────────
-// Mode 2: Pi.createPayment() مباشر على app domain
-// Prerequisites: Pi.init() اشتغل → window.__TEC_PI_READY = true
 export const createU2APayment = async (
   amount:     number,
   memo:       string,
@@ -80,29 +71,30 @@ export const createU2APayment = async (
   internalId: string,
 ): Promise<PaymentResult> => {
   return new Promise(async (resolve) => {
-    if (typeof window === 'undefined' || !window.Pi) {
+    // ✅ Type-safe Pi check
+    const pi = (typeof window !== 'undefined' ? window.Pi : undefined) as PiSDK | undefined;
+    if (!pi) {
       resolve({ status: 'error', success: false, message: 'Pi SDK not ready' });
       return;
     }
 
     let settled = false;
-    const done = (result: PaymentResult) => {
+    const done = (result: PaymentResult): void => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
       resolve(result);
     };
 
-    // ✅ 90s timeout — يمنع spinner للأبد
     const timer = setTimeout(() => {
       done({ status: 'error', success: false, message: 'Payment timed out' });
     }, 90_000);
 
     const headers = buildPaymentHeaders();
 
-    // ✅ Authenticate أولاً — يحل incomplete payments
+    // ✅ Authenticate + handle incomplete payments
     try {
-      await window.Pi.authenticate(
+      await pi.authenticate(
         ['username', 'payments'],
         async (incomplete: unknown) => {
           const pid = (incomplete as { identifier?: string } | null)?.identifier;
@@ -124,31 +116,23 @@ export const createU2APayment = async (
       return;
     }
 
-    // ✅ Pi.createPayment — الدفع الفعلي
+    // ✅ Pi.createPayment
     try {
-      window.Pi.createPayment(
-        {
-          amount,
-          memo,
-          metadata: { ...metadata, internalId },
-        },
+      pi.createPayment(
+        { amount, memo, metadata: { ...metadata, internalId } },
         {
           onReadyForServerApproval: async (piPaymentId: string) => {
             const res = await fetch('/api/bff/payment/approve', {
               method:      'POST',
               credentials: 'include',
               headers,
-              body: JSON.stringify({
-                payment_id:    internalId,
-                pi_payment_id: piPaymentId,
-              }),
+              body: JSON.stringify({ payment_id: internalId, pi_payment_id: piPaymentId }),
             });
             if (!res.ok) {
               const e = await res.json().catch(() => ({})) as Record<string, string>;
               done({ status: 'error', success: false, message: e?.error ?? 'Approve failed' });
             }
           },
-
           onReadyForServerCompletion: async (piPaymentId: string, txid: string) => {
             const res = await fetch('/api/bff/payment/complete', {
               method:      'POST',
@@ -166,10 +150,8 @@ export const createU2APayment = async (
               done({ status: 'error', success: false, message: 'Complete failed' });
             }
           },
-
-          onCancel: () => done({ status: 'cancelled', success: false }),
-
-          onError: (err: Error) =>
+          onCancel:  () => done({ status: 'cancelled', success: false }),
+          onError:   (err: Error) =>
             done({ status: 'error', success: false, message: err.message }),
         },
       );
