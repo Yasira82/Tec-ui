@@ -1,5 +1,25 @@
 // ── Mode 2: Direct Pi.createPayment() ────────────────────
-// يُستخدم لما الـ app يعمل Pi.init() على domain-ها مباشرة
+
+// ── Local Pi type (مش بنعتمد على global) ─────────────────
+interface PiSDK {
+  authenticate: (
+    scopes:              string[],
+    onIncompletePayment: (payment: unknown) => void,
+  ) => Promise<{ accessToken: string; user: { uid: string; username: string } }>;
+  createPayment: (
+    data: {
+      amount:   number;
+      memo:     string;
+      metadata: Record<string, unknown>;
+    },
+    callbacks: {
+      onReadyForServerApproval:    (piPaymentId: string) => void;
+      onReadyForServerCompletion:  (piPaymentId: string, txid: string) => void;
+      onCancel: (paymentId: string) => void;
+      onError:  (error: Error, payment?: unknown) => void;
+    },
+  ) => void;
+}
 
 // ── Cookie helpers ────────────────────────────────────────
 export const getToken = (): string | null => {
@@ -71,8 +91,13 @@ export const createU2APayment = async (
   internalId: string,
 ): Promise<PaymentResult> => {
   return new Promise(async (resolve) => {
-    // ✅ Type-safe Pi check
-    const pi = (typeof window !== 'undefined' ? window.Pi : undefined) as PiSDK | undefined;
+    // ✅ Local PiSDK type — مش global
+    const pi = (
+      typeof window !== 'undefined'
+        ? (window as unknown as { Pi?: PiSDK }).Pi
+        : undefined
+    );
+
     if (!pi) {
       resolve({ status: 'error', success: false, message: 'Pi SDK not ready' });
       return;
@@ -126,7 +151,10 @@ export const createU2APayment = async (
               method:      'POST',
               credentials: 'include',
               headers,
-              body: JSON.stringify({ payment_id: internalId, pi_payment_id: piPaymentId }),
+              body: JSON.stringify({
+                payment_id:    internalId,
+                pi_payment_id: piPaymentId,
+              }),
             });
             if (!res.ok) {
               const e = await res.json().catch(() => ({})) as Record<string, string>;
