@@ -1,5 +1,6 @@
 import { TEC_DOMAINS } from '../constants';
 
+// ── Mode 1 — Hub Redirect ─────────────────────────────────
 export interface HubPayParams {
   amount:    number;
   memo:      string;
@@ -20,6 +21,7 @@ export const handleBuy = (params: HubPayParams): void => {
   window.location.href = buildHubPayUrl(params);
 };
 
+// ── Return params (after Hub redirect) ───────────────────
 export interface PaymentReturnParams {
   status:    string | null;
   txid:      string | null;
@@ -43,3 +45,14 @@ export const getPaymentReturnParams = (): PaymentReturnParams => {
 export const clearPaymentParams = (): void => {
   window.history.replaceState({}, '', window.location.pathname);
 };
+
+// ── Mode 2 — Direct Payment ───────────────────────────────
+export {
+  createPaymentRecord,
+  createU2APayment,
+  getToken,
+  getCsrfToken,
+  buildPaymentHeaders,
+} from './createPayment';
+
+export type { PaymentResult } from './createPayment';
