@@ -77,8 +77,100 @@ refactor:     no external behavior change
 chore:        build/config only
 ```
 
+---
+
+## Phase 0 — v1.2.0 Roadmap (C-41)
+
+v1.2.0 is a Phase 0 deliverable required before Mainnet submission:
+
+```
+□ Add createU2APayment() to src/payment/
+□ Add PaymentModal component to src/payment/
+□ Add payment status badge components
+□ Add observability status components (success/failure indicators)
+□ Publish v1.2.0
+□ Coordinate upgrade: Commerce + Assets + Ecommerce all update simultaneously
+```
+
+**Why shared PaymentModal matters:**
+- Currently each app builds its own payment UI (fragmentation risk)
+- v1.2.0 centralizes this → one fix if Pi payment UX changes
+- Complies with P5 Layer Responsibility (contracts layer = tec-ui)
+
+---
+
+## Platform Orchestra — This Repo
+
+**Role:** Shared Design System — the visual language of the entire TEC platform
+**Consumers:** tec-app · tec-ecommerce · tec-assets · tec-commerce (ALL apps)
+**Rule:** Pure UI only — no Pi SDK, no auth, no backend calls
+
+```
+tec-app, tec-ecommerce, tec-assets, tec-commerce
+  → import @yasser172/tec-ui
+      → TEC_COLORS, GlobalNav, formatPi, PaymentModal (v1.2.0)
+      → all styling via inline styles (Pi Browser compatible)
+```
+
+A breaking change here breaks ALL 4 apps simultaneously.
+
+---
+
+## Commercial Targets
+
+- v1.2.0: payment UI helpers + observability components (Phase 0 milestone)
+- Pi Browser compatibility: every component renders without CSS modules
+- Backward compatibility: NEVER remove export without major version bump
+- TEC_COLORS adoption: all apps use token names — zero hardcoded hex
+
+---
+
+## Risk Register
+
+| # | Risk | Severity | Mitigation |
+|---|------|----------|------------|
+| R1 | Breaking change breaks ALL apps | P0 | Semver strict — breaking = major version |
+| R2 | CSS modules or Tailwind added | P1 | Inline styles ONLY — Pi Browser incompatible |
+| R3 | `window.Pi` reference added | P1 | ZERO Pi SDK in this package |
+| R4 | App-specific component added | P2 | Platform-wide only — reject app-specific PRs |
+| R5 | TEC_COLORS values changed | P1 | Color tokens = contract — coordinate across apps |
+
+---
+
+## Platform Governance
+
+### SHARED — This package defines the visual contract
+- `TEC_COLORS`: canonical color tokens — all apps must use
+- `GlobalNav`: shared navigation component
+- `formatPi`, `formatDate`: shared formatters
+- `PaymentModal` (v1.2.0): shared payment UI — no per-app reimplementation
+
+### SOVEREIGN — This package owns
+- Component API surface and prop design
+- Style implementation
+- Build output format (ESM + CJS)
+
+---
+
+## Release Gate Protocol
+
+```bash
+npm run type-check   # 0 errors
+npm run build        # clean dist/ — both ESM and CJS outputs
+grep -r "window\.Pi\|Pi\.init\|Pi\.create" src/ && echo "FAIL: Pi SDK detected" || echo "clean"
+grep -r "\.module\.\|tailwind" src/ && echo "FAIL: CSS framework detected" || echo "clean"
+git status           # clean
+git fetch origin claude/ecommerce-engineering-review-EuiQO
+git rebase origin/claude/ecommerce-engineering-review-EuiQO
+```
+
+**Before any export removal/rename:** verify all 4 consumer apps compile with updated version.
+
+---
+
 ## Platform Context
 
 Full platform context, ADR system, and engineering roadmap:
 → `TEC_MODELS_PAT.prompt.yml` in yasira82/tec-app (branch: claude/ecommerce-engineering-review-EuiQO)
 → `TEC_Ecosystem_AI_Key.prompt.yml` in yasira82/tec-app
+→ C-41 Engineering Roadmap — v1.2.0 is Phase 0 deliverable
