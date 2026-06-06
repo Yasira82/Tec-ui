@@ -21,3 +21,20 @@ export {
   formatDate,
   generateRequestId, buildBffHeaders,
 }                                                        from './utils';
+
+// ── Payment ───────────────────────────────────────────────
+export {
+  buildHubPayUrl, handleBuy,
+  getPaymentReturnParams, clearPaymentParams,
+  createPaymentRecord, createU2APayment,
+  getToken, getCsrfToken, buildPaymentHeaders,
+  PaymentModal,
+  PaymentStatusBadge,
+  ObservabilityStatus, ServiceHealthDot,
+}                                                        from './payment';
+export type {
+  HubPayParams, PaymentReturnParams, PaymentResult,
+  PaymentModalProps, PayStatus,
+  PaymentStatusBadgeProps, PaymentStatusValue,
+  ObservabilityStatusProps, ServiceHealthDotProps,
+}                                                        from './payment';

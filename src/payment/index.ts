@@ -56,3 +56,13 @@ export {
 } from './createPayment';
 
 export type { PaymentResult } from './createPayment';
+
+// ── UI Components ─────────────────────────────────────────
+export { PaymentModal }            from './PaymentModal';
+export type { PaymentModalProps, PayStatus } from './PaymentModal';
+
+export { PaymentStatusBadge }      from './PaymentStatusBadge';
+export type { PaymentStatusBadgeProps, PaymentStatusValue } from './PaymentStatusBadge';
+
+export { ObservabilityStatus, ServiceHealthDot } from './ObservabilityStatus';
+export type { ObservabilityStatusProps, ServiceHealthDotProps } from './ObservabilityStatus';
