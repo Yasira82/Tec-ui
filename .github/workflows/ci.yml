@@ -55,10 +55,10 @@ jobs:
           fi
           echo "clean — inline styles only"
 
-      - name: Policy — no NEXT_PUBLIC env references
+      - name: Policy — no hardcoded Railway URLs
         run: |
-          if grep -r "NEXT_PUBLIC_" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "__tests__"; then
-            echo "FAIL: NEXT_PUBLIC_ env reference detected"
+          if grep -r "railway\.app" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "__tests__" | grep -v "^\s*//"; then
+            echo "FAIL: Hardcoded Railway URL detected in package source"
             exit 1
           fi
-          echo "clean — no public env references"
+          echo "clean — no Railway URLs"
