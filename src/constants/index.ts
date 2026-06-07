@@ -6,7 +6,7 @@ export const TEC_DOMAINS = {
   ASSETS:    process.env['NEXT_PUBLIC_ASSETS_URL']     ?? 'https://assets.tecosystem.app',
   ECOMMERCE: process.env['NEXT_PUBLIC_ECOMMERCE_URL']  ?? 'https://ecommerce.tecosystem.app',
   LIFE:      process.env['NEXT_PUBLIC_LIFE_URL']       ?? 'https://life.tecosystem.app',
-  GATEWAY:   process.env['NEXT_PUBLIC_API_GATEWAY_URL'] ?? 'https://api-gateway-production-6a68.up.railway.app',
+  GATEWAY:   process.env['NEXT_PUBLIC_API_GATEWAY_URL'] ?? '',
 } as const;
 
 export const TEC_APPS: TecAppMeta[] = [
