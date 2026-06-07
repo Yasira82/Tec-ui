@@ -65,6 +65,8 @@ npm run type-check  # TypeScript strict check
 - Do NOT add app-specific components (ecommerce-only, hub-only, etc.)
 - Do NOT remove or rename existing exports without a major version bump
 - Do NOT use Tailwind, CSS modules, or styled-components
+- Do NOT release v1.2.0 without testing PaymentModal in Pi Browser (not just Chrome)
+- Do NOT remove or rename exports without JSDoc @deprecated + major version bump
 
 ---
 
@@ -84,13 +86,20 @@ chore:        build/config only
 v1.2.0 is a Phase 0 deliverable required before Mainnet submission:
 
 ```
-□ Add createU2APayment() to src/payment/
-□ Add PaymentModal component to src/payment/
+□ Add createU2APayment() to src/payment/     ← NEXT
+□ Add PaymentModal component to src/payment/ ← NEXT
 □ Add payment status badge components
 □ Add observability status components (success/failure indicators)
 □ Publish v1.2.0
 □ Coordinate upgrade: Commerce + Assets + Ecommerce all update simultaneously
 ```
+
+### v1.2.0 Upgrade Coordination Plan
+When v1.2.0 is ready:
+1. Run `npm run build + type-check` in ALL 4 consumer apps before publishing
+2. Replace each app's local PaymentModal with @yasser172/tec-ui PaymentModal
+3. Verify Pi Browser rendering (not just Chrome) before merging any app
+4. Deploy ALL 4 apps simultaneously — staggered deploy = version mismatch risk
 
 **Why shared PaymentModal matters:**
 - Currently each app builds its own payment UI (fragmentation risk)
@@ -122,6 +131,47 @@ A breaking change here breaks ALL 4 apps simultaneously.
 - Pi Browser compatibility: every component renders without CSS modules
 - Backward compatibility: NEVER remove export without major version bump
 - TEC_COLORS adoption: all apps use token names — zero hardcoded hex
+
+---
+
+## Common Debug Patterns
+
+### "Component renders blank in Pi Browser"
+```
+Symptom: Component works in Chrome but blank/broken in Pi Browser.
+Cause A: CSS modules or Tailwind classes used — Pi Browser incompatible.
+Cause B: CSS variable (var(--tec-gold) etc.) undefined — consuming app missing token import.
+Fix A:   ALL styles must be inline styles. No CSS modules. No Tailwind. No styled-components.
+Fix B:   Consuming app's layout.tsx must import '@/styles/tec-design-tokens.css'.
+         Check if hub/layout.tsx or dashboard/layout.tsx has this import.
+```
+
+### "Type error after upgrading tec-ui version"
+```
+Symptom: TypeScript errors in app after npm update @yasser172/tec-ui.
+Cause:   Breaking change in tec-ui without semver major version bump.
+Fix:     ANY export removal, rename, or prop type change = major version bump.
+         NEVER remove an export — all 4 apps depend on all exported symbols.
+         Add JSDoc @deprecated before removing — keep for 1 full major version.
+```
+
+### "PaymentModal not available after npm install"
+```
+Symptom: 'PaymentModal' is not exported from '@yasser172/tec-ui'.
+Cause:   v1.2.0 not yet published — PaymentModal is a Phase 0 deliverable.
+Status:  PENDING — v1.2.0 adds: createU2APayment(), PaymentModal, status badges.
+Fix:     Each app uses its own PaymentModal until v1.2.0 ships.
+         When v1.2.0 publishes: ALL 4 apps upgrade simultaneously (coordinated deploy).
+```
+
+### "Build error: 'window is not defined' in tec-ui"
+```
+Symptom: Build error referencing a file inside @yasser172/tec-ui.
+Cause:   Browser API (window.*, document.*) or Pi SDK added to tec-ui package.
+Fix:     Run: grep -r "window\." src/ — must return zero results.
+         tec-ui is PURE UI — zero browser API, zero Pi SDK, zero fetch calls.
+         Remove immediately — this breaks SSR for ALL 4 apps simultaneously.
+```
 
 ---
 

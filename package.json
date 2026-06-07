@@ -2,42 +2,50 @@
   "name": "@yasser172/tec-ui",
   "version": "1.2.0",
   "description": "TEC Ecosystem — UI Components, Types, Constants, Utils & Payment helpers",
-  "main":    "./dist/index.js",
-  "module":  "./dist/index.mjs",
-  "types":   "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types":   "./dist/index.d.ts",
-      "import":  "./dist/index.mjs",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
     "./payment": {
-      "types":   "./dist/payment/index.d.ts",
-      "import":  "./dist/payment/index.mjs",
+      "types": "./dist/payment/index.d.ts",
+      "import": "./dist/payment/index.mjs",
       "require": "./dist/payment/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build":          "tsup",
-    "dev":            "tsup --watch",
-    "typecheck":      "tsc --noEmit",
-    "test":           "vitest run --coverage",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "react":     ">=18",
+    "react": ">=18",
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@types/node":          "^20.0.0",
-    "@types/react":         "^18.0.0",
-    "@types/react-dom":     "^18.0.0",
-    "@vitest/coverage-v8":  "^4.0.0",
-    "happy-dom":            "^17.0.0",
-    "tsup":                 "^8.0.0",
-    "typescript":           "^5.0.0",
-    "vitest":               "^4.0.0"
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitest/coverage-v8": "^4.0.0",
+    "happy-dom": "^17.0.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.0"
   },
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  }
 }

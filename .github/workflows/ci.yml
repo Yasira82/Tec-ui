@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Type-check · Test · Build · Policy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-ui-${{ hashFiles('package-lock.json') }}
+          restore-keys: ${{ runner.os }}-ui-
+
+      - run: npm install
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Tests + Coverage
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Policy — no Pi SDK references
+        run: |
+          if grep -r "window\.Pi\|Pi\.init\|Pi\.createPayment" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "__tests__"; then
+            echo "FAIL: Pi SDK reference detected in package source"
+            exit 1
+          fi
+          echo "clean — no Pi SDK references"
+
+      - name: Policy — no CSS modules or Tailwind
+        run: |
+          if grep -r "\.module\.\|tailwind\|styled-components" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "__tests__"; then
+            echo "FAIL: CSS framework detected in package source"
+            exit 1
+          fi
+          echo "clean — inline styles only"
+
+      - name: Policy — no NEXT_PUBLIC env references
+        run: |
+          if grep -r "NEXT_PUBLIC_" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "__tests__"; then
+            echo "FAIL: NEXT_PUBLIC_ env reference detected"
+            exit 1
+          fi
+          echo "clean — no public env references"
