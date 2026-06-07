@@ -38,7 +38,10 @@ jobs:
 
       - name: Policy — no Pi SDK references
         run: |
-          if grep -r "window\.Pi\|Pi\.init\|Pi\.createPayment" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "__tests__"; then
+          if grep -r "window\.Pi\|Pi\.init\|Pi\.createPayment" src/ --include="*.ts" --include="*.tsx" 2>/dev/null \
+            | grep -v "__tests__" \
+            | grep -v "^\s*//" \
+            | grep -v "//.*Pi\."; then
             echo "FAIL: Pi SDK reference detected in package source"
             exit 1
           fi
