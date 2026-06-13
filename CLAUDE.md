@@ -178,7 +178,7 @@ Fix:     Run: grep -r "window\." src/ — must return zero results.
 ## Risk Register
 
 | # | Risk | Severity | Mitigation |
-|---|------|----------|------------|
+|---|------|----------|-----------|
 | R1 | Breaking change breaks ALL apps | P0 | Semver strict — breaking = major version |
 | R2 | CSS modules or Tailwind added | P1 | Inline styles ONLY — Pi Browser incompatible |
 | R3 | `window.Pi` reference added | P1 | ZERO Pi SDK in this package |
@@ -225,56 +225,21 @@ Full platform context, ADR system, and engineering roadmap:
 → `TEC_Ecosystem_AI_Key.prompt.yml` in yasira82/tec-app
 → C-41 Engineering Roadmap — v1.2.0 is Phase 0 deliverable
 
+
 ---
 
-## Dynamic Orchestration
+## Skills
 
-### Ecosystem Role
-**Visual Contract** — shared design system. Any breaking export change breaks ALL 4 consumer apps simultaneously. This is the highest blast-radius npm package in the platform.
+Available via plugin — invoke automatically when the situation matches:
 
-### Dependency Map
-
-| Direction | Repos / Services |
-|-----------|------------------|
-| Upstream | None — pure UI package, no external dependencies |
-| Downstream | `tec-app` · `tec-ecommerce` · `tec-assets` · `tec-commerce` — ALL simultaneously |
-
-### Cross-Repo Workflow Triggers
-
-| Event | Coordinate With | Required Action |
-|-------|----------------|------------------|
-| ANY export removal or rename | tec-app, tec-ecommerce, tec-assets, tec-commerce | MUST verify all 4 apps compile BEFORE publishing |
-| `TEC_COLORS` value change | All 4 apps | Platform-wide visual regression — coordinate all deploys |
-| New component added | All 4 apps (Pi Browser test) | Test in Pi Browser — not just Chrome |
-| v1.2.0 release | tec-app, tec-ecommerce, tec-assets, tec-commerce | Coordinated deploy: ALL 4 apps update simultaneously — never stagger |
-| `PaymentModal` API change | All 4 apps (v1.2.0+) | All 4 apps use shared modal — one change = 4 app updates |
-| `SemanticDomain` type addition | All 4 apps (Gate A) | Phase 2 capability — do not ship until Gate A ready |
-
-### Release Chain Position
-
-```
-tec-core-backend (deploy)
-  → tec-sdk (npm publish)
-    → tec-auth (npm publish)
-      → tec-ui (npm publish)  ← HERE (publish THIRD — before any app deploy)
-        → tec-app + tec-ecommerce + tec-assets + tec-commerce (simultaneous)
-```
-
-### v1.2.0 Coordination Protocol
-When v1.2.0 is ready:
-1. `npm run build + type-check` in ALL 4 consumer apps before publishing
-2. Replace each app's local PaymentModal → `@yasser172/tec-ui` PaymentModal
-3. Verify Pi Browser rendering (not just Chrome) before merge
-4. Deploy ALL 4 apps simultaneously — staggered = version mismatch
-
-### Orchestration Rules
-- Zero window.Pi / Pi SDK references — EVER (breaks SSR for all 4 apps simultaneously)
-- Zero CSS modules or Tailwind — inline styles ONLY (Pi Browser compatibility)
-- Export removal = major semver bump — add `@deprecated` JSDoc for 1 full major version first
-
-### Knowledge Base Reference
-→ `yasira82/tec-knowledge-base` (branch: `claude/gifted-knuth-1yhom3`)
-→ Master index: `knowledge-base/C-57___MASTER_CONTENTS_INDEX.md`
-→ EVL/ESL design system: `knowledge-base/C-83___EVL_ESL.md`
-→ Platform maturity gates: `knowledge-base/C-82___PLATFORM_MATURITY_EVOLUTION.md`
-→ Release governance: `knowledge-base/C-75___RELEASE_GOVERNANCE_SPEC.md`
+| Situation | Skill |
+|-----------|-------|
+| Writing new feature or fixing a bug → use TDD | `/tdd` |
+| Bug, regression, or unexpected behavior | `/diagnose` |
+| Writing or modifying tests | `/test-guard` |
+| Writing or modifying BFF routes, payment handlers, or API contracts | `/clean-code-guard` |
+| Updating docs, CLAUDE.md, or knowledge-base entries | `/docs-guard` |
+| Planning a new feature or architectural decision | `/grill-with-docs` |
+| Breaking down a roadmap item into GitHub Issues | `/to-issues` |
+| Session is getting long or context is filling up | `/handoff` |
+| Adding pre-commit hooks to this repo | `/setup-pre-commit` |
