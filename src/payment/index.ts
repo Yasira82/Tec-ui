@@ -18,6 +18,7 @@ export const buildHubPayUrl = (params: HubPayParams): string =>
   + `&source=${params.source}`;
 
 export const handleBuy = (params: HubPayParams): void => {
+  if (typeof window === 'undefined') return;
   window.location.href = buildHubPayUrl(params);
 };
 
@@ -43,6 +44,7 @@ export const getPaymentReturnParams = (): PaymentReturnParams => {
 };
 
 export const clearPaymentParams = (): void => {
+  if (typeof window === 'undefined') return;
   window.history.replaceState({}, '', window.location.pathname);
 };
 
