@@ -7,6 +7,18 @@ Versioning: [Semantic Versioning](https://semver.org/)
 
 ---
 
+## [2.1.1] - 2026-06-26
+
+### Added
+- README, LICENSE (MIT), CHANGELOG now included in the published package
+  (`files` was `dist`-only); `license`, `engines`, `sideEffects: false` metadata.
+- npm publish provenance (`--provenance` + `id-token: write`).
+- Dependabot config (npm + github-actions, weekly).
+
+### Changed
+- `tsconfig`: enabled `noUncheckedIndexedAccess`.
+- Coverage thresholds ratcheted to current actual (80/68/75/82).
+
 ## [2.1.0] - 2026-06-26
 
 ### Added
