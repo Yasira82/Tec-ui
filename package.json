@@ -1,6 +1,6 @@
 {
   "name": "@yasser172/tec-ui",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "TEC Ecosystem — UI Components, Types, Constants, Utils & Payment helpers",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -17,8 +17,16 @@
       "require": "./dist/payment/index.js"
     }
   },
+  "license": "MIT",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsup",
