@@ -30,12 +30,24 @@ src/
 ```
 
 ### TEC_COLORS (always use these, never hardcode hex in apps)
+**v2.0.0 — EVL palette (C-83 is the authority for these tokens).**
 ```typescript
-TEC_COLORS.gold      // #d4af37  — primary accent
-TEC_COLORS.goldDark  // #b8882a  — buttons/gradients
-TEC_COLORS.bg        // #020205  — page background
-TEC_COLORS.surface   // #0d0d14  — card/drawer background
+// WEALTH accent
+TEC_COLORS.gold      // #FBBF24  — primary accent (EVL WEALTH; was #d4af37 pre-2.0)
+TEC_COLORS.goldDark  // #F59E0B  — buttons/gradients
+TEC_COLORS.goldLight // #FCD34D  — highlights
+// Background layers (C-83 §4 — immutable)
+TEC_COLORS.bg        // #050816  — Layer 1 page background (was #020205 pre-2.0)
+TEC_COLORS.surface   // #0B1020  — Layer 2 card/drawer (was #0d0d14 pre-2.0)
+TEC_COLORS.surface2  // #111627  — Layer 3 elevated
+// EVL semantic domains (C-83 §5)
+TEC_COLORS.purple    // #8B5CF6  — IDENTITY
+TEC_COLORS.green     // #22C55E  — GROWTH
+TEC_COLORS.cyan      // #06B6D4  — INTELLIGENCE
+TEC_COLORS.red       // #EF4444  — RISK
+TEC_COLORS.blue      // #3B82F6  — GOVERNANCE
 ```
+> **v2.0.0 is a breaking visual change** (EVL adoption). No exports removed — only token VALUES changed + semantic tokens added. Consumer apps adopt by bumping to `^2.0.0` (coordinate per the upgrade plan below).
 
 ---
 

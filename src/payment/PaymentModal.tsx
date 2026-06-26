@@ -30,7 +30,7 @@ export function PaymentModal({ status, amount, label, message, onClose, onRetry 
         style={{
           width: '100%', maxWidth: 320, borderRadius: 28,
           background: TEC_COLORS.surface,
-          border: `1px solid rgba(212,175,55,0.2)`,
+          border: `1px solid rgba(251,191,36,0.2)`,
           padding: '36px 28px', textAlign: 'center',
           boxShadow: '0 40px 80px rgba(0,0,0,0.6)',
         }}
@@ -38,10 +38,10 @@ export function PaymentModal({ status, amount, label, message, onClose, onRetry 
       >
         <div style={{
           width: 56, height: 56, borderRadius: 18,
-          background: `linear-gradient(135deg,${TEC_COLORS.gold},#8b6914)`,
+          background: `linear-gradient(135deg,${TEC_COLORS.gold},${TEC_COLORS.goldDark})`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 22, fontWeight: 900, color: '#07070f',
-          margin: '0 auto 14px', boxShadow: '0 8px 24px rgba(212,175,55,0.25)',
+          margin: '0 auto 14px', boxShadow: '0 8px 24px rgba(251,191,36,0.25)',
         }}>T</div>
 
         <p style={{ fontFamily: 'system-ui,sans-serif', fontSize: 12, color: '#4a4a5a', marginBottom: 6, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
@@ -55,7 +55,7 @@ export function PaymentModal({ status, amount, label, message, onClose, onRetry 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
             <div style={{
               width: 36, height: 36, borderRadius: '50%',
-              border: '3px solid rgba(212,175,55,0.15)', borderTopColor: TEC_COLORS.gold,
+              border: '3px solid rgba(251,191,36,0.15)', borderTopColor: TEC_COLORS.gold,
               animation: 'tec-spin 0.8s linear infinite',
             }} />
             <p style={{ fontFamily: 'system-ui,sans-serif', fontSize: 13, color: '#4a4a5a' }}>
@@ -112,7 +112,7 @@ export function PaymentModal({ status, amount, label, message, onClose, onRetry 
 
 const btnPrimary: React.CSSProperties = {
   padding: '12px 28px', borderRadius: 14, border: 'none',
-  background: 'linear-gradient(135deg,#d4af37,#b8882a)',
+  background: `linear-gradient(135deg,${TEC_COLORS.gold},${TEC_COLORS.goldDark})`,
   color: '#07070f', fontSize: 13, fontWeight: 800,
   fontFamily: 'system-ui,sans-serif', cursor: 'pointer',
 };

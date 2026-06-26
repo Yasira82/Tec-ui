@@ -15,7 +15,7 @@ export interface PaymentStatusBadgeProps {
 }
 
 const CONFIG: Record<PaymentStatusValue, { label: string; bg: string; color: string; dot: string }> = {
-  pending:   { label: 'Pending',   bg: 'rgba(212,175,55,0.12)', color: '#d4af37', dot: '#d4af37' },
+  pending:   { label: 'Pending',   bg: 'rgba(251,191,36,0.12)', color: '#FBBF24', dot: '#FBBF24' },
   approved:  { label: 'Approved',  bg: 'rgba(59,130,246,0.12)', color: '#60a5fa', dot: '#60a5fa' },
   completed: { label: 'Completed', bg: 'rgba(34,197,94,0.12)',  color: '#4ade80', dot: '#4ade80' },
   cancelled: { label: 'Cancelled', bg: 'rgba(156,163,175,0.12)',color: '#9ca3af', dot: '#9ca3af' },
