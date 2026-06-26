@@ -1,6 +1,9 @@
 // ── UI Components ─────────────────────────────────────────
 export { GlobalNav }                                     from './GlobalNav';
 export type { GlobalNavProps, GlobalNavItem, TecApp }    from './GlobalNav';
+export { Icon }                                          from './Icon';
+export type { IconName }                                 from './Icon';
+export { CountUp }                                       from './CountUp';
 
 // ── Theme ─────────────────────────────────────────────────
 export { TEC_COLORS, TEC_FONTS, TEC_RADIUS }             from './theme';
