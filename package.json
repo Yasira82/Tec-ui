@@ -17,8 +17,16 @@
       "require": "./dist/payment/index.js"
     }
   },
+  "license": "MIT",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsup",

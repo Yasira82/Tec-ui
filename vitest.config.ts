@@ -10,12 +10,13 @@ export default defineConfig({
       reporter: ['text', 'json-summary'],
       include:  ['src/**/*.{ts,tsx}'],
       exclude:  ['src/__tests__/**', 'src/**/*.d.ts'],
-      // Regression floor — set just below current (77/67/73/81). Raise as coverage grows.
+      // Regression floor — ratcheted just below current actual (81.8/70.6/77.5/84.2).
+      // Raise as coverage grows; never lower without justification.
       thresholds: {
-        statements: 72,
-        branches:   62,
-        functions:  68,
-        lines:      75,
+        statements: 80,
+        branches:   68,
+        functions:  75,
+        lines:      82,
       },
     },
   },
