@@ -1,16 +1,28 @@
+// TEC Economic Visual Language (EVL) — C-83 is the authority for these tokens.
+// v2.0.0 adopts EVL as the live platform identity (was the legacy gold #d4af37 set).
 export const TEC_COLORS = {
-  gold:       '#d4af37',
-  goldDark:   '#b8882a',
-  goldLight:  '#e8c84a',
-  bg:         '#020205',
-  surface:    '#0d0d14',
+  // ── WEALTH (primary accent) — EVL gold ──────────────────────────
+  gold:       '#FBBF24',   // EVL WEALTH (was #d4af37)
+  goldDark:   '#F59E0B',   // amber-500 — gradients/buttons
+  goldLight:  '#FCD34D',   // amber-300 — highlights
+  // ── Background layers (C-83 §4 — immutable) ─────────────────────
+  bg:         '#050816',   // Layer 1 — primary background (was #020205)
+  surface:    '#0B1020',   // Layer 2 — surface (was #0d0d14)
+  surface2:   '#111627',   // Layer 3 — card / elevated
   border:     '#ffffff08',
   text:       '#ffffff',
   subtext:    '#6b6b7a',
-  success:    '#7ee7c0',
-  error:      '#e74c3c',
-  info:       '#7eb8f7',
-  warning:    '#f0c040',
+  // ── EVL semantic domains (C-83 §5) ──────────────────────────────
+  purple:     '#8B5CF6',   // IDENTITY
+  green:      '#22C55E',   // GROWTH
+  cyan:       '#06B6D4',   // INTELLIGENCE
+  red:        '#EF4444',   // RISK
+  blue:       '#3B82F6',   // GOVERNANCE
+  // ── State colors (aligned to EVL semantics) ─────────────────────
+  success:    '#22C55E',   // GROWTH
+  error:      '#EF4444',   // RISK
+  info:       '#06B6D4',   // INTELLIGENCE
+  warning:    '#FBBF24',   // WEALTH
 } as const;
 
 export const TEC_FONTS = {
