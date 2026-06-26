@@ -1,6 +1,6 @@
 {
   "name": "@yasser172/tec-ui",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "TEC Ecosystem — UI Components, Types, Constants, Utils & Payment helpers",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
