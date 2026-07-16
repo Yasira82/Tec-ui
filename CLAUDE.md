@@ -222,8 +222,8 @@ npm run build        # clean dist/ — both ESM and CJS outputs
 grep -r "window\.Pi\|Pi\.init\|Pi\.create" src/ && echo "FAIL: Pi SDK detected" || echo "clean"
 grep -r "\.module\.\|tailwind" src/ && echo "FAIL: CSS framework detected" || echo "clean"
 git status           # clean
-git fetch origin claude/ecommerce-engineering-review-EuiQO
-git rebase origin/claude/ecommerce-engineering-review-EuiQO
+git fetch origin main
+git rebase origin/main
 ```
 
 **Before any export removal/rename:** verify all 4 consumer apps compile with updated version.
@@ -233,7 +233,7 @@ git rebase origin/claude/ecommerce-engineering-review-EuiQO
 ## Platform Context
 
 Full platform context, ADR system, and engineering roadmap:
-→ `TEC_MODELS_PAT.prompt.yml` in yasira82/tec-app (branch: claude/ecommerce-engineering-review-EuiQO)
+→ `TEC_MODELS_PAT.prompt.yml` in yasira82/tec-app (branch: main)
 → `TEC_Ecosystem_AI_Key.prompt.yml` in yasira82/tec-app
 → C-41 Engineering Roadmap — v1.2.0 is Phase 0 deliverable
 
