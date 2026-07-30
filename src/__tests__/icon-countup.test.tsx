@@ -7,6 +7,11 @@ import { CountUp } from '../CountUp';
 const ALL_ICONS: IconName[] = [
   'hub', 'wallet', 'gem', 'cart', 'settings', 'bell', 'sparkles', 'store',
   'receipt', 'chart', 'box', 'plus', 'search', 'tag', 'truck', 'home', 'shirt', 'phone',
+  // expanded set (professional icon system — replaces emoji across apps)
+  'utensils', 'heart', 'book', 'palette', 'code', 'wrench', 'briefcase', 'building',
+  'rocket', 'star', 'gift', 'compass', 'trophy', 'user', 'users', 'coins', 'globe',
+  'shield', 'check', 'verified', 'lock', 'zap', 'info', 'alert', 'pin',
+  'arrow-right', 'chevron-right', 'external', 'close', 'refresh', 'calendar', 'clock',
 ];
 
 describe('Icon', () => {

@@ -5,6 +5,13 @@ export { Icon }                                          from './Icon';
 export type { IconName }                                 from './Icon';
 export { CountUp }                                       from './CountUp';
 
+// ── Primitives (polished, shared building blocks) ─────────
+export { Card, Button, Chip, EmptyState, Skeleton }      from './primitives';
+export type {
+  CardProps, ButtonProps, ButtonVariant, ButtonSize,
+  ChipProps, EmptyStateProps, SkeletonProps,
+}                                                        from './primitives';
+
 // ── Theme ─────────────────────────────────────────────────
 export { TEC_COLORS, TEC_FONTS, TEC_RADIUS }             from './theme';
 
