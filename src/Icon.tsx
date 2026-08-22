@@ -18,7 +18,15 @@ export type IconName =
   // status / trust
   | 'shield' | 'check' | 'verified' | 'lock' | 'zap' | 'info' | 'alert' | 'pin'
   // actions / chrome
-  | 'arrow-right' | 'chevron-right' | 'external' | 'close' | 'refresh' | 'calendar' | 'clock';
+  | 'arrow-right' | 'chevron-right' | 'external' | 'close' | 'refresh' | 'calendar' | 'clock'
+  // ── App glyphs — one picture per TEC app ─────────────────────────────
+  // The launchers ran on emoji, which fails an icon set twice over: the
+  // platform font draws half of them as glossy 3D objects and half as flat
+  // grey line art (and which you get depends on the device), and it handed
+  // different apps the identical picture. These complete the set so every
+  // app has its own glyph, in one style, everywhere it appears.
+  | 'trending' | 'landmark' | 'target' | 'towers' | 'sprout' | 'link'
+  | 'award' | 'crown' | 'scale' | 'network' | 'shield-check' | 'bot';
 
 const PATHS: Record<IconName, string> = {
   hub:      '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
@@ -75,6 +83,23 @@ const PATHS: Record<IconName, string> = {
   refresh:   '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
   calendar:  '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
   clock:     '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+
+  // ── App glyphs ───────────────────────────────────────────────────────
+  trending:      '<path d="M3 17 9 11l4 4 8-8"/><path d="M15 7h6v6"/>',
+  landmark:      '<path d="M3 22h18"/><path d="M6 18V11"/><path d="M10 18V11"/><path d="M14 18V11"/><path d="M18 18V11"/><path d="m12 2 9 6H3Z"/>',
+  target:        '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.3"/>',
+  // Two office towers — institutional property, distinct from `home` and `landmark`.
+  towers:        '<path d="M2.5 21h19"/><path d="M4.5 21V8.5h6.5V21"/><path d="M11 21V3.5h8.5V21"/><path d="M6.7 11.5h2M6.7 15h2M13.4 7h3.5M13.4 11h3.5M13.4 15h3.5"/>',
+  sprout:        '<path d="M12 21v-8"/><path d="M12 13C12 9 9 6 4 6c0 5 3 7 8 7Z"/><path d="M12 13c0-3.5 2.5-6 7-6 0 4.5-2.5 6-7 6Z"/>',
+  link:          '<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7L12.5 19.5"/>',
+  // Reputation reads as a chain and must not blur together:
+  // trophy (achieved) -> award (recognised) -> crown (privileged).
+  award:         '<circle cx="12" cy="9" r="5.5"/><path d="M8.6 13.4 7.2 21.5 12 18.8l4.8 2.7-1.4-8.1"/>',
+  crown:         '<path d="M3 17.5V8l4.6 3.6L12 4.5l4.4 7.1L21 8v9.5Z"/><path d="M3 20.5h18"/>',
+  scale:         '<path d="M12 3v18"/><path d="M7 21h10"/><path d="M4 7h16"/><path d="m4 7-3 6a3 3 0 0 0 6 0Z"/><path d="m20 7 3 6a3 3 0 0 1-6 0Z"/>',
+  network:       '<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M12 7.5v4M12 11.5 6.8 16.2M12 11.5l5.2 4.7"/>',
+  'shield-check':'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/>',
+  bot:           '<rect x="3.5" y="8" width="17" height="12.5" rx="3.5"/><path d="M12 4.2V8"/><circle cx="12" cy="3" r="1.2"/><path d="M1.5 13v3M22.5 13v3"/><path d="M9 12.8h.01M15 12.8h.01"/><path d="M9.5 16.8h5"/>',
 };
 
 interface IconProps {
@@ -89,8 +114,12 @@ export function Icon({ name, size = 24, color = 'currentColor', strokeWidth = 2,
   return (
     <svg
       width={size} height={size} viewBox="0 0 24 24" fill="none"
-      stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"
-      aria-hidden="true" focusable="false" style={style}
+      strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"
+      aria-hidden="true" focusable="false"
+      /* `stroke` goes through inline STYLE, not the SVG presentation attribute:
+         callers pass design tokens (`var(--tec-gold)`), and an attribute that
+         fails to resolve leaves the icon invisible. Caller styles still win. */
+      style={{ stroke: color, ...style }}
       dangerouslySetInnerHTML={{ __html: PATHS[name] }}
     />
   );
