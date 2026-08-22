@@ -30,7 +30,8 @@ describe('Icon', () => {
     const { container } = render(<Icon name="bell" />);
     const svg = container.querySelector('svg')!;
     expect(svg.getAttribute('width')).toBe('24');
-    expect(svg.getAttribute('stroke')).toBe('currentColor');
+    // Stroke rides on inline STYLE, not the presentation attribute — see below.
+    expect(svg.style.stroke).toBe('currentColor');
     expect(svg.getAttribute('stroke-width')).toBe('2');
   });
 
@@ -41,9 +42,24 @@ describe('Icon', () => {
     const svg = container.querySelector('svg')!;
     expect(svg.getAttribute('width')).toBe('32');
     expect(svg.getAttribute('height')).toBe('32');
-    expect(svg.getAttribute('stroke')).toBe('#FBBF24');
+    expect(svg.style.stroke).toBe('#FBBF24');
     expect(svg.getAttribute('stroke-width')).toBe('1.5');
     expect(svg.style.opacity).toBe('0.5');
+  });
+
+  it('paints stroke through style, so a design TOKEN resolves', () => {
+    // The reason this is not a presentation attribute: `stroke="var(--x)"` is
+    // not reliably parsed as a CSS value, and an unresolved stroke renders the
+    // icon invisible. Consumers pass tokens (`var(--tec-gold)`) constantly.
+    const { container } = render(<Icon name="bot" color="var(--tec-gold)" />);
+    const svg = container.querySelector('svg')!;
+    expect(svg.getAttribute('stroke')).toBeNull();
+    expect(svg.style.stroke).toBe('var(--tec-gold)');
+  });
+
+  it('lets a caller style override the default stroke', () => {
+    const { container } = render(<Icon name="crown" style={{ stroke: 'red' }} />);
+    expect(container.querySelector('svg')!.style.stroke).toBe('red');
   });
 });
 
