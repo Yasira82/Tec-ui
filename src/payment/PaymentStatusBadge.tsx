@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { TEC_COLORS } from '../theme';
 
 export type PaymentStatusValue =
   | 'pending'
@@ -14,8 +15,13 @@ export interface PaymentStatusBadgeProps {
   size?:  'sm' | 'md';
 }
 
+// `pending` is the WEALTH accent — it named the old amber twice as a literal
+// and once more as rgba(251,191,36), so when TEC_COLORS moved to the Pi amber
+// this badge stayed behind on the value the rest of the package had left. It
+// reads the token now; the other four are their own semantic colours and are
+// not the accent, so they stay literal.
 const CONFIG: Record<PaymentStatusValue, { label: string; bg: string; color: string; dot: string }> = {
-  pending:   { label: 'Pending',   bg: 'rgba(251,191,36,0.12)', color: '#FBBF24', dot: '#FBBF24' },
+  pending:   { label: 'Pending',   bg: `${TEC_COLORS.gold}1f`, color: TEC_COLORS.gold, dot: TEC_COLORS.gold },
   approved:  { label: 'Approved',  bg: 'rgba(59,130,246,0.12)', color: '#60a5fa', dot: '#60a5fa' },
   completed: { label: 'Completed', bg: 'rgba(34,197,94,0.12)',  color: '#4ade80', dot: '#4ade80' },
   cancelled: { label: 'Cancelled', bg: 'rgba(156,163,175,0.12)',color: '#9ca3af', dot: '#9ca3af' },
