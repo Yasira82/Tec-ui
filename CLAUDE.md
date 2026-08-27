@@ -30,12 +30,13 @@ src/
 ```
 
 ### TEC_COLORS (always use these, never hardcode hex in apps)
-**v2.0.0 — EVL palette (C-83 is the authority for these tokens).**
+**v3.0.0 — EVL palette on the Pi amber (C-83 is the authority for these tokens).**
 ```typescript
-// WEALTH accent
-TEC_COLORS.gold      // #FBBF24  — primary accent (EVL WEALTH; was #d4af37 pre-2.0)
-TEC_COLORS.goldDark  // #F59E0B  — buttons/gradients
-TEC_COLORS.goldLight // #FCD34D  — highlights
+// WEALTH accent — sampled from the Pi app itself (#FBB44A is its splash mark),
+// so a TEC app beside Pi Browser chrome reads as the same product.
+TEC_COLORS.gold      // #FBB44A  — primary accent (was #FBBF24 in 2.x, #d4af37 pre-2.0)
+TEC_COLORS.goldDark  // #E8962A  — buttons/gradients
+TEC_COLORS.goldLight // #FDCF7A  — highlights
 // Background layers (C-83 §4 — immutable)
 TEC_COLORS.bg        // #050816  — Layer 1 page background (was #020205 pre-2.0)
 TEC_COLORS.surface   // #0B1020  — Layer 2 card/drawer (was #0d0d14 pre-2.0)
@@ -47,7 +48,16 @@ TEC_COLORS.cyan      // #06B6D4  — INTELLIGENCE
 TEC_COLORS.red       // #EF4444  — RISK
 TEC_COLORS.blue      // #3B82F6  — GOVERNANCE
 ```
-> **v2.0.0 is a breaking visual change** (EVL adoption). No exports removed — only token VALUES changed + semantic tokens added. Consumer apps adopt by bumping to `^2.0.0` (coordinate per the upgrade plan below).
+> **v3.0.0 is a breaking visual change** (the Pi amber). No exports removed or renamed — only token VALUES changed. Consumer apps adopt by bumping to `^3.0.0` (coordinate per the upgrade plan below).
+>
+> **Every value stays a plain 6-digit hex, and that is load-bearing.** Apps append
+> alpha to these strings — `` `1px solid ${TEC_COLORS.gold}33` ``, 216 places
+> across the fleet — so a `var(--tec-gold)` here would render
+> `var(--tec-gold)33`: invalid CSS, no error, and a border that silently stops
+> painting everywhere at once. **Theme-aware colour belongs in a CSS custom
+> property the app owns, never in this object** — one constant cannot hold both
+> the dark-ground amber and the deeper `#FEA500` a light theme needs.
+> `theme-contract.test.ts` pins this.
 
 ---
 
@@ -217,10 +227,16 @@ Fix:     Run: grep -r "window\." src/ — must return zero results.
 ## Release Gate Protocol
 
 ```bash
-npm run type-check   # 0 errors
+npm run typecheck    # 0 errors  (the script is `typecheck`, not `type-check`)
+npm run test         # all pass
 npm run build        # clean dist/ — both ESM and CJS outputs
-grep -r "window\.Pi\|Pi\.init\|Pi\.create" src/ && echo "FAIL: Pi SDK detected" || echo "clean"
-grep -r "\.module\.\|tailwind" src/ && echo "FAIL: CSS framework detected" || echo "clean"
+# Real CALLS only. The old form grepped bare `Pi.create` over everything and so
+# matched this package's own comments in src/payment/createPayment.ts — it
+# reported FAIL on a clean tree, which is how a gate teaches people to ignore it.
+grep -rnE "window\.Pi|Pi\.(init|createPayment|authenticate)\(" src --include=*.ts --include=*.tsx \
+  | grep -vE "^[^:]+:[0-9]+: *(//|\*)" | grep -v "__tests__" \
+  && echo "FAIL: Pi SDK detected" || echo "clean"
+grep -rn "\.module\.\|tailwind" src/ && echo "FAIL: CSS framework detected" || echo "clean"
 git status           # clean
 git fetch origin main
 git rebase origin/main
